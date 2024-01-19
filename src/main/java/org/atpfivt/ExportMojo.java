@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -43,15 +44,23 @@ public final class ExportMojo extends AbstractMojo {
         this.zipFileName = zipFileName;
     }
 
+    private boolean isNotInBuildDirectory(Path path) {
+        return !path.startsWith(buildDirectory.toPath());
+    }
+
     public void execute()
             throws MojoExecutionException {
+        Path buildPath = buildDirectory.toPath();
         File zipFile = new File(buildDirectory, zipFileName);
         try {
-            Files.createDirectories(buildDirectory.toPath());
+            Files.createDirectories(buildPath);
             try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile))) {
                 Path basePath = baseDirectory.toPath();
                 PathsCollector collector = new PathsCollector(basePath);
-                List<Path> pathList = collector.getFiles();
+                List<Path> pathList =
+                        collector.getFiles().stream().filter(
+                                this::isNotInBuildDirectory
+                        ).collect(Collectors.toList());
                 for (Path path : pathList) {
                     Path relativePath = basePath.relativize(path);
                     zos.putNextEntry(new ZipEntry(relativePath.toString()));

@@ -33,15 +33,15 @@ class ExportMojoTest {
         exportMojo.setBaseDirectory(root.toFile());
         exportMojo.setBuildDirectory(target.toFile());
         exportMojo.setZipFileName("export.zip");
+    }
+
+    @Test
+    void exportSavesFilesRespectingTheGitignore() throws MojoExecutionException, IOException {
         Files.write(root.resolve(".gitignore"),
                 List.of("#gitignore test", "*.ignoreme", "target/"));
         Files.writeString(root.resolve("a"), "test");
         Files.writeString(root.resolve("b"), "test");
         Files.writeString(root.resolve("a.ignoreme"), "test");
-    }
-
-    @Test
-    void exportSavesFilesRespectingTheGitignore() throws MojoExecutionException, IOException {
         exportMojo.execute();
         Set<String> filenames = new HashSet<>();
         try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(target.resolve("export.zip").toFile()))) {
@@ -51,7 +51,23 @@ class ExportMojoTest {
             }
         }
         assertEquals(Set.of("a", "b", ".gitignore"), filenames);
+    }
 
+    @Test
+    void exportOmitsTargetEvenIfNoGitignoreProvided() throws MojoExecutionException, IOException {
+        Files.writeString(root.resolve("a"), "test");
+        Files.writeString(root.resolve("b"), "test");
+        Files.writeString(root.resolve("a.ignoreme"), "test");
+        Files.writeString(target.resolve("helloworld.class"), "cafebabe");
+        exportMojo.execute();
+        Set<String> filenames = new HashSet<>();
+        try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(target.resolve("export.zip").toFile()))) {
+            ZipEntry nextEntry;
+            while ((nextEntry = zipInputStream.getNextEntry()) != null) {
+                filenames.add(nextEntry.getName());
+            }
+        }
+        assertEquals(Set.of("a", "b", "a.ignoreme"), filenames);
     }
 
     @AfterEach
