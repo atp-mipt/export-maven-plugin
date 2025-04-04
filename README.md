@@ -25,7 +25,7 @@ To use the plugin, insert the following configuration into the plugins section o
     <plugin>
         <groupId>org.atp-fivt</groupId>
         <artifactId>export-maven-plugin</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
         <configuration>
             <zipFileName>Name_Surname.zip</zipFileName>
         </configuration>
