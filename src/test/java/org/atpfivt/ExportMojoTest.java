@@ -42,6 +42,8 @@ class ExportMojoTest {
         Files.writeString(root.resolve("a"), "test");
         Files.writeString(root.resolve("b"), "test");
         Files.writeString(root.resolve("a.ignoreme"), "test");
+        Files.createDirectories(root.resolve("src"));
+        Files.writeString(root.resolve("src").resolve("foo"), "test");
         exportMojo.execute();
         Set<String> filenames = new HashSet<>();
         try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(target.resolve("export.zip").toFile()))) {
@@ -50,7 +52,7 @@ class ExportMojoTest {
                 filenames.add(nextEntry.getName());
             }
         }
-        assertEquals(Set.of("a", "b", ".gitignore"), filenames);
+        assertEquals(Set.of("a", "b", ".gitignore", "src/foo"), filenames);
     }
 
     @Test

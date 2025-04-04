@@ -10,6 +10,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -62,7 +63,7 @@ public final class ExportMojo extends AbstractMojo {
                                 this::isNotInBuildDirectory
                         ).collect(Collectors.toList());
                 for (Path path : pathList) {
-                    Path relativePath = basePath.relativize(path);
+                    URI relativePath = basePath.toUri().relativize(path.toUri());
                     zos.putNextEntry(new ZipEntry(relativePath.toString()));
                     Files.copy(path, zos);
                     zos.closeEntry();

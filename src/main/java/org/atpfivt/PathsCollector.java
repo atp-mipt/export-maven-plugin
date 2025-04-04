@@ -53,14 +53,4 @@ final class PathsCollector {
         }
         return entries;
     }
-
-    public static void main(String[] args) throws IOException {
-        final PathsCollector collector = new PathsCollector(Path.of("c:\\ideaspace\\celesta\\"));
-        final List<Path> files = collector.getFiles();
-        for (Path file : files) {
-
-            System.out.println(file);
-        }
-
-    }
 }
