@@ -11,12 +11,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import static org.atpfivt.StripMarkedSections.stripMarkedSections;
 
 /**
  * Goal which exports the project into zip file respecting .gitignore.
@@ -33,6 +36,9 @@ public final class ExportMojo extends AbstractMojo {
     @Parameter(defaultValue = "export.zip")
     private String zipFileName;
 
+    @Parameter(defaultValue = "false")
+    private boolean stripMarked;
+
     void setBaseDirectory(File baseDirectory) {
         this.baseDirectory = baseDirectory;
     }
@@ -45,9 +51,14 @@ public final class ExportMojo extends AbstractMojo {
         this.zipFileName = zipFileName;
     }
 
+    void setStripMarked(boolean stripMarked) {
+        this.stripMarked = stripMarked;
+    }
+
     private boolean isNotInBuildDirectory(Path path) {
         return !path.startsWith(buildDirectory.toPath());
     }
+
 
     public void execute()
             throws MojoExecutionException {
@@ -65,7 +76,26 @@ public final class ExportMojo extends AbstractMojo {
                 for (Path path : pathList) {
                     URI relativePath = basePath.toUri().relativize(path.toUri());
                     zos.putNextEntry(new ZipEntry(relativePath.toString()));
-                    Files.copy(path, zos);
+                    String fileName = path.getFileName().toString();
+                    if (stripMarked && fileName.endsWith(".java")) {
+                        /* ----- JAVA SOURCE: strip //[[ … //]] blocks ----- */
+                        String src = Files.readString(path, StandardCharsets.UTF_8);
+                        String cleaned = stripMarkedSections(src);
+                        if (cleaned.length() != src.length()) {
+                            getLog().info("Stripped file: " + path);
+                        }
+                        zos.write(cleaned.getBytes(StandardCharsets.UTF_8));
+
+                    } else if (stripMarked && "pom.xml".equals(fileName)) {
+                        /* ----- POM: remove the export-plugin marker ----- */
+                        String pom = Files.readString(path, StandardCharsets.UTF_8);
+                        String cleaned = pom.replace("<stripMarked>true</stripMarked>", "");
+                        zos.write(cleaned.getBytes(StandardCharsets.UTF_8));
+
+                    } else {
+                        /* ----- Everything else copied verbatim ----- */
+                        Files.copy(path, zos);
+                    }
                     zos.closeEntry();
                 }
             }
