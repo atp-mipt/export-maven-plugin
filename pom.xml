@@ -45,7 +45,7 @@
         <maven.version>3.9.10</maven.version>
         <checkstyle.maven.plugin.version>3.6.0</checkstyle.maven.plugin.version>
         <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
-        <checkstyle.version>10.25.0</checkstyle.version>
+        <checkstyle.version>10.26.1</checkstyle.version>
     </properties>
 
     <dependencies>
