@@ -54,7 +54,7 @@ If you are a teacher preparing a homework/lab template and you don't want to inc
     <plugin>
         <groupId>org.atp-fivt</groupId>
         <artifactId>export-maven-plugin</artifactId>
-        <version>1.2</version>
+        <version>...</version>
         <configuration>
             <zipFileName>assignment_template.zip</zipFileName>
             <stripMarked>true</stripMarked>
@@ -71,3 +71,4 @@ When `stripMarked` is set to `true`, the plugin removes code blocks in Java sour
 ```
 
 Note: when exporting with `stripMarked=true`, the plugin also removes the `<stripMarked>true</stripMarked>` line from the exported `pom.xml` to avoid leaking the teacher-only setting into the student project.
+
