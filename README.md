@@ -1,7 +1,7 @@
 # Export Maven Plugin
 
 [![Actions Status: build](https://github.com/atp-mipt/export-maven-plugin/workflows/build/badge.svg)](https://github.com/atp-mipt/export-maven-plugin/actions?query=workflow%3A"build")
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.atp-fivt/export-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.atp-fivt/export-maven-plugin)
+![Maven Central](https://img.shields.io/maven-central/v/org.atp-fivt/export-maven-plugin?color=green)
 
 The Export Maven Plugin is an Apache Maven plugin designed for exporting an entire Maven project into a .zip file. It respects the `.gitignore` settings and, regardless of `.gitignore`, always omits the build directory (`target`).
 
@@ -25,7 +25,7 @@ To use the plugin, insert the following configuration into the plugins section o
     <plugin>
         <groupId>org.atp-fivt</groupId>
         <artifactId>export-maven-plugin</artifactId>
-        <version>1.2</version>
+        <version>1.4</version>
         <configuration>
             <zipFileName>Name_Surname.zip</zipFileName>
         </configuration>
@@ -45,3 +45,29 @@ The resulting `.zip` file will be located in the target directory.
 ## How does it work
 
 This plugin leverages the [jGit](https://www.eclipse.org/jgit/) library to compile a list of all files in the project, adhering to the rules specified in `.gitignore` files. Importantly, the functionality of this plugin does not require Git to be installed on the target machine. This is particularly beneficial in educational settings or environments where Git installation cannot be assumed. By using jGit, the plugin operates independently of the local Git installation.
+
+### `stripMarked` flag (for teachers preparing templates)
+
+If you are a teacher preparing a homework/lab template and you don't want to include full solutions in the exported archive, you can enable the `stripMarked` flag:
+
+```xml
+    <plugin>
+        <groupId>org.atp-fivt</groupId>
+        <artifactId>export-maven-plugin</artifactId>
+        <version>1.2</version>
+        <configuration>
+            <zipFileName>assignment_template.zip</zipFileName>
+            <stripMarked>true</stripMarked>
+        </configuration>
+    </plugin>
+```
+
+When `stripMarked` is set to `true`, the plugin removes code blocks in Java sources that are wrapped with special markers and thus keeps only the assignment skeleton in the exported `.zip`. Use the following markers in Java files:
+
+```java
+//[[
+// implementation that should NOT be included into the student template
+//]]
+```
+
+Note: when exporting with `stripMarked=true`, the plugin also removes the `<stripMarked>true</stripMarked>` line from the exported `pom.xml` to avoid leaking the teacher-only setting into the student project.
