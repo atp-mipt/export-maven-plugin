@@ -46,7 +46,7 @@ The resulting `.zip` file will be located in the target directory.
 
 This plugin leverages the [jGit](https://www.eclipse.org/jgit/) library to compile a list of all files in the project, adhering to the rules specified in `.gitignore` files. Importantly, the functionality of this plugin does not require Git to be installed on the target machine. This is particularly beneficial in educational settings or environments where Git installation cannot be assumed. By using jGit, the plugin operates independently of the local Git installation.
 
-### `stripMarked` flag (for teachers preparing templates)
+## `stripMarked` flag (for teachers preparing templates)
 
 If you are a teacher preparing a homework/lab template and you don't want to include full solutions in the exported archive, you can enable the `stripMarked` flag:
 
@@ -71,4 +71,5 @@ When `stripMarked` is set to `true`, the plugin removes code blocks in Java sour
 ```
 
 Note: when exporting with `stripMarked=true`, the plugin also removes the `<stripMarked>true</stripMarked>` line from the exported `pom.xml` to avoid leaking the teacher-only setting into the student project.
+
 
