@@ -1,7 +1,7 @@
 # Export Maven Plugin
 
 [![Actions Status: build](https://github.com/atp-mipt/export-maven-plugin/workflows/build/badge.svg)](https://github.com/atp-mipt/export-maven-plugin/actions?query=workflow%3A"build")
-![Maven Central](https://img.shields.io/maven-central/v/org.atp-fivt/export-maven-plugin?color=green)
+[![Maven Central](https://img.shields.io/maven-central/v/org.atp-fivt/export-maven-plugin)](https://central.sonatype.com/artifact/org.atp-fivt/export-maven-plugin)
 
 The Export Maven Plugin is an Apache Maven plugin designed for exporting an entire Maven project into a .zip file. It respects the `.gitignore` settings and, regardless of `.gitignore`, always omits the build directory (`target`).
 
