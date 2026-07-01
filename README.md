@@ -25,7 +25,7 @@ To use the plugin, insert the following configuration into the plugins section o
     <plugin>
         <groupId>org.atp-fivt</groupId>
         <artifactId>export-maven-plugin</artifactId>
-        <version>1.4</version>
+        <version>1.5</version>
         <configuration>
             <zipFileName>Name_Surname.zip</zipFileName>
         </configuration>
@@ -33,6 +33,10 @@ To use the plugin, insert the following configuration into the plugins section o
 ```
 
 The `zipFileName` parameter allows you to specify the desired name for the zip file. By default, the file name is set to export.zip.
+
+## Requirements
+
+Starting with version 1.5, the plugin runs on **Maven hosted by Java 17 or newer** (any Maven 3.9.x or 4.x installation whose JVM is Java 17+). If you are still running Maven on Java 8 or 11, stay on version 1.4.
 
 To run the plugin, execute:
 
@@ -44,7 +48,9 @@ The resulting `.zip` file will be located in the target directory.
 
 ## How does it work
 
-This plugin leverages the [jGit](https://www.eclipse.org/jgit/) library to compile a list of all files in the project, adhering to the rules specified in `.gitignore` files. Importantly, the functionality of this plugin does not require Git to be installed on the target machine. This is particularly beneficial in educational settings or environments where Git installation cannot be assumed. By using jGit, the plugin operates independently of the local Git installation.
+This plugin leverages the [jGit](https://www.eclipse.org/jgit/) library to compile a list of all files in the project, adhering to the rules specified in `.gitignore` files. Importantly, the functionality of this plugin does not require Git to be installed on the target machine. This is particularly beneficial in educational settings or environments where Git installation cannot be assumed. By using jGit, the plugin operates independently of the local Git installation. 
+
+Also, regardless of `.gitignore` rules, the build target folder is never included in the resulting `.zip`.
 
 ## `stripMarked` flag (for teachers preparing templates)
 

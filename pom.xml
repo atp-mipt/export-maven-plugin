@@ -5,7 +5,7 @@
 
     <groupId>org.atp-fivt</groupId>
     <artifactId>export-maven-plugin</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
     <packaging>maven-plugin</packaging>
 
     <name>Maven project export plugin</name>
