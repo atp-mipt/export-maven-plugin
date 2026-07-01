@@ -40,19 +40,20 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <!-- Artifact bytecode/API level: the plugin runs on Maven hosted by JDK 17+ -->
+        <maven.compiler.release>17</maven.compiler.release>
         <maven.version>3.9.15</maven.version>
         <checkstyle.maven.plugin.version>3.6.0</checkstyle.maven.plugin.version>
+        <maven.enforcer.plugin.version>3.6.3</maven.enforcer.plugin.version>
         <maven.surefire.plugin.version>3.5.5</maven.surefire.plugin.version>
-        <checkstyle.version>10.25.0</checkstyle.version>
+        <checkstyle.version>13.7.0</checkstyle.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>6.10.0.202406032230-r</version>
+            <version>7.7.0.202606012155-r</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -87,13 +88,47 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.13.1</version>
+            <version>6.0.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven.enforcer.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-build-environment</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3.9,3.10)</version>
+                                    <message>This build requires Maven 3.9.x.</message>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <!-- Build JDK: Checkstyle 13.x needs 21+. The produced
+                                         artifact targets Java 17 (maven.compiler.release). -->
+                                    <version>[21,)</version>
+                                    <message>This build requires JDK 21 or newer.</message>
+                                </requireJavaVersion>
+                                <!-- POM sanity checks -->
+                                <banDuplicatePomDependencyVersions/>
+                                <requireUpperBoundDeps/>
+                                <requireReleaseDeps>
+                                    <message>No SNAPSHOT dependencies are allowed in a release build.</message>
+                                </requireReleaseDeps>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -172,7 +207,7 @@
                 <version>3.12.0</version>
                 <configuration>
                     <!-- silence doclint warnings that break the build on JDK 8+ -->
-                    <source>${maven.compiler.target}</source>
+                    <source>${maven.compiler.release}</source>
                     <doclint>none</doclint>
                     <failOnError>false</failOnError>
                 </configuration>
