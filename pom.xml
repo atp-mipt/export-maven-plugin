@@ -46,7 +46,7 @@
         <checkstyle.maven.plugin.version>3.6.0</checkstyle.maven.plugin.version>
         <maven.enforcer.plugin.version>3.6.3</maven.enforcer.plugin.version>
         <maven.surefire.plugin.version>3.5.6</maven.surefire.plugin.version>
-        <checkstyle.version>13.7.0</checkstyle.version>
+        <checkstyle.version>13.8.0</checkstyle.version>
     </properties>
 
     <dependencies>
