@@ -108,8 +108,8 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>[3.9,3.10)</version>
-                                    <message>This build requires Maven 3.9.x.</message>
+                                    <version>[3.9,)</version>
+                                    <message>This build requires Maven 3.9 or newer.</message>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <!-- Build JDK: Checkstyle 13.x needs 21+. The produced
